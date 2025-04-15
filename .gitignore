@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+*.tmp
+*.DS_Store
+
+# Env & Secrets
+.env
+.env.*
+
+# Serverless
+.serverless/
+.sls-next/
+.sls-cache/
+.sls-plugin-cache/
+
+# OS and Editor Junk
+.vscode/
+.idea/
+*.swp
+
+# S3 Temp & Uploads
+temp_*.pdf
+/tmp/
+*.pdf
+
+# ChromaDB Local Vector Store
+chroma_db/
+
+# Pip / Poetry
+*.egg-info/
+dist/
+build/
+.cache/
+
+# Lambda zip packages
+*.zip
+node_modules

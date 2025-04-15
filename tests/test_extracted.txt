@@ -1,0 +1,69 @@
+Muammer Utku Ozdil, Senior Software Engineer
+Ankara, Turkey, +905423441486, utkuozdil@gmail.com
+P R O F I L E Senior Software Developer  with expertise in designing scalable software solutions. Proficient in leveraging 
+Python, A WS, and the Serverless Framework to deliver high-performing, cloud-native applications. Adept at 
+solving complex challenges, improving efficiency, and driving impactful results across distributed teams.
+E M P L OY M E N T  H I S TO RY 
+Feb 2021 — Aug 2024 Senior Software Engineer, Staircase Remote
+•Developed APIs using Python, Serverless Framework, and A WS services to optimize the mortgage 
+process, delivering faster, cost-effective solutions that enhanced customer satisfaction. Integrated with 
+over 20 data partners, streamlining data exchange across XML, JSON, and HTML formats, reducing 
+onboarding time.
+•Created a mortgage boarding product that orchestrates multiple systems, combining loan data with 
+maximum available information, resulting in increased operational efficiency.
+•Developed a programmable configuration product via A WS CloudFormation for partners without APIs, 
+and created proxy APIs for hosted partners on A WS, improving integration flexibility.
+•Architected and developed a Notary process, seamlessly integrating with three distinct partners using a 
+unified communication language, ensuring smooth and asynchronous operations.
+•Designed and implemented a ChatBot solution using OpenAI Assistant APIs to automate data collection 
+and document generation, significantly improving efficiency and the user experience.
+•Collaborated with cross-functional teams spanning different time zones and cultures to align projects with 
+business goals and ensure smooth coordination, contributing to successful project outcomes in a remote, 
+fast-paced environment.
+•Communicated effectively with both technical and non-technical stakeholders, providing clear updates, 
+managing expectations, and driving consensus on product strategies. Delivered impactful product 
+demonstrations to global stakeholders, showcasing product capabilities and securing buy-in from diverse 
+audiences.
+Apr 2020 — Feb 2021 Software Engineer, Arçelik Ankara
+•Developed a cloud ecosystem for seamless communication between IoT devices and mobile applications 
+using Java, Python, and A WS, improving real-time data exchange and significantly enhancing system 
+efficiency.
+•Designed and implemented REST APIs  within a serverless architecture using A WS (API Gateway, 
+Lambda, DynamoDB, SNS, SQS, RDS, IoT Core) , ensuring a scalable and maintainable infrastructure 
+with Terraform, Serverless Framework , and CloudFormation.
+•Optimized system operations by utilizing A WS monitoring tools such as CloudWatch, X-Ray, and 
+CloudTrail, enabling rapid issue identification and resolution for smoother performance.
+Dec 2017 — Apr 2020 Software Engineer, Central Bank of Republic of Turkey Ankara
+•Developed and maintained web applications for the accounting department using Java 8, Spring 5, JPA, 
+React.js, Docker, and DB2, delivering solutions that streamlined accounting processes and significantly 
+improved system reliability.
+•Enhanced code readability and maintainability by applying object-oriented principles, while optimizing 
+data processing with the Java 8 Stream API for more efficient filtering, grouping, and reducing 
+operations, leading to faster processing times.
+Aug 2015 — Nov 2017 Software Engineer, Ming Software Ankara
+•Led the design and development of a web application for law firms using Java, Spring, Hibernate, and 
+PostgreSQL, which streamlined legal processes and improved system efficiency.
+•Improved system stability by designing, maintaining, and optimizing databases, while resolving key issues 
+through proactive bug fixes.
+•Integrated external services and automated manual processes, significantly enhancing operational 
+efficiency and reducing workloads for end-users.S K I L L S Language: Python, Java, 
+Javascript
+Cloud: A WS
+Database: SQL(PostgreSQL, 
+DB2, RDS) 
+NoSQL(DynamoDB)
+Software Architecture & Design: 
+Cloud-native architectures, 
+scalable systems, OOP, design 
+patternsTech Stack: React, Spring, Spring 
+Boot, Hibernate, Serverless, 
+REST API
+CI/CD: Docker, Kubernetes, 
+Terraform, Jenkins, Github 
+Actions
+Soft Skills: cross-functional 
+collaboration, communication 
+with stakeholders, startup and 
+remote experience
+E D U C AT I O N 
+Sep 2010 — Jun 2015 Bachelor's Degree(Computer Science), Hacettepe University Ankara
