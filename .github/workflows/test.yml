@@ -1,4 +1,4 @@
-name: Test and Coverage
+name: Python Tests and Coverage
 
 on:
   push:
