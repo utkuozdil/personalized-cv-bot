@@ -1,0 +1,163 @@
+service: cv-chatbot-rag
+
+provider:
+  name: aws
+  runtime: python3.10
+  region: us-east-1
+  environment:
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+    BUCKET_NAME: cv-chatbot-bucket-${sls:stage}
+    API_GATEWAY: https://jbxv5wke6f.execute-api.us-east-1.amazonaws.com/dev
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:ListBucket
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:Query
+            - dynamodb:UpdateItem
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - ses:SendEmail
+            - ses:SendRawEmail
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - sns:Publish
+          Resource: "*"
+  
+functions:
+  processPdf:
+    handler: src/handlers/process_pdf.handler
+    events:
+      - http:
+          path: /extract
+          method: post
+  
+  embedText:
+    handler: src/handlers/embed_text.handler
+    events:
+      - s3:
+          bucket: cv-chatbot-bucket-${sls:stage}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: extracted/
+          existing: true
+    environment:
+      OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+      GENERATE_FIRST_MESSAGE_TOPIC:
+        Ref: GenerateFirstMessageTopic
+    timeout: 900
+    memorySize: 2048
+  
+  websocketHandler:
+    handler: src/handlers/websocket.handler
+    events:
+      - websocket:
+          route: $default
+    timeout: 30
+    memorySize: 2048
+
+  getStatus:
+    handler: src/handlers/get_status.handler
+    events:
+      - http:
+          path: status/{uuid}
+          method: get
+  
+  confirmResume:
+    handler: src/handlers/confirm_resume.handler
+    events:
+      - http:
+          path: confirm
+          method: get
+
+  generateFirstMessage:
+    handler: src/handlers/generate_first_message.handler
+    events:
+      - sns:
+          arn: arn:aws:sns:${aws:region}:${aws:accountId}:generate-first-message-topic
+    timeout: 30
+    memorySize: 2048
+
+  checkEmail:
+    handler: src/handlers/check_email.handler
+    events:
+      - http:
+          path: check-email
+          method: get
+
+plugins:
+  - serverless-python-requirements
+  - serverless-dotenv-plugin
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    useStaticCache: true
+    useDownloadCache: true
+    slim: true
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**             # Exclude virtual environment
+    - .pytest_cache/**    # Exclude pytest cache
+    - tests/**            # Exclude tests
+    - .venv/**
+    - .serverless/**
+  include:
+    - src/**              # Include application source files
+    - requirements.txt
+
+resources:
+  Resources:
+    CVBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName:
+          Fn::Sub: "cv-chatbot-bucket-${sls:stage}"
+
+    UploadsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: uploads
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: uuid
+            AttributeType: S
+          - AttributeName: secure_token
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+          - AttributeName: uuid
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: uuid-index
+            KeySchema:
+              - AttributeName: uuid
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: token-index
+            KeySchema:
+              - AttributeName: secure_token
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    GenerateFirstMessageTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: generate-first-message-topic

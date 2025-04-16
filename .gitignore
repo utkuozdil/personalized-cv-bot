@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test coverage
+.coverage
+coverage.xml
+htmlcov/
+
+# Environment variables
+.env
+.env.*
+
+# AWS
+.serverless/
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env & Secrets
+.env
+.env.*
+
+# Serverless
+.serverless/
+.sls-next/
+.sls-cache/
+.sls-plugin-cache/
+
+# S3 Temp & Uploads
+temp_*.pdf
+/tmp/
+*.pdf
+
+# ChromaDB Local Vector Store
+chroma_db/
+
+# Pip / Poetry
+*.egg-info/
+dist/
+build/
+.cache/
+
+# Lambda zip packages
+*.zip
+node_modules

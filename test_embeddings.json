@@ -1,0 +1,16 @@
+{
+    "chunks": [
+        {
+            "text": "Experienced with AWS services including Lambda, S3, and DynamoDB.",
+            "embedding": [0.1, 0.2, 0.3]
+        },
+        {
+            "text": "Proficient in Python, JavaScript, and TypeScript programming languages.",
+            "embedding": [0.2, 0.3, 0.4]
+        },
+        {
+            "text": "Used various cloud platforms including AWS, GCP, and Azure.",
+            "embedding": [0.3, 0.4, 0.5]
+        }
+    ]
+} 
