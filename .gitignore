@@ -1,12 +1,52 @@
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.sqlite3
-*.log
-*.tmp
-*.DS_Store
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test coverage
+.coverage
+coverage.xml
+htmlcov/
+
+# Environment variables
+.env
+.env.*
+
+# AWS
+.serverless/
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Env & Secrets
 .env
@@ -17,11 +57,6 @@ __pycache__/
 .sls-next/
 .sls-cache/
 .sls-plugin-cache/
-
-# OS and Editor Junk
-.vscode/
-.idea/
-*.swp
 
 # S3 Temp & Uploads
 temp_*.pdf

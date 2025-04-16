@@ -22,16 +22,24 @@ def chunk_text(text, max_words=200, overlap=50):
     current_chunk = []
     current_len = 0
 
+    # Process each block
     for block in blocks:
         words = block.split()
-        if current_len + len(words) <= max_words:
-            current_chunk.extend(words)
-            current_len += len(words)
-        else:
-            if current_chunk:
-                chunks.append(" ".join(current_chunk))
-            current_chunk = words
-            current_len = len(words)
+        while words:
+            if current_len + len(words) <= max_words:
+                current_chunk.extend(words)
+                current_len += len(words)
+                words = []
+            else:
+                # Calculate how many words we can take
+                words_to_take = max_words - current_len
+                if words_to_take > 0:
+                    current_chunk.extend(words[:words_to_take])
+                    words = words[words_to_take:]
+                if current_chunk:
+                    chunks.append(" ".join(current_chunk))
+                current_chunk = []
+                current_len = 0
 
     if current_chunk:
         chunks.append(" ".join(current_chunk))
