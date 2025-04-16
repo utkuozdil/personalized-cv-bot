@@ -3,11 +3,25 @@ import numpy as np
 import json
 import os
 import pytest
+from unittest.mock import patch
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# Mock embedding response
+MOCK_EMBEDDING = [0.1] * 1536  # OpenAI embeddings are 1536-dimensional
+
+class MockEmbeddingResponse:
+    class Data:
+        def __init__(self, embedding):
+            self.embedding = embedding
+
+    def __init__(self, embedding):
+        self.data = [self.Data(embedding)]
+
+def mock_create(*args, **kwargs):
+    return MockEmbeddingResponse(MOCK_EMBEDDING)
 
 # --- Core Functions ---
 
@@ -41,7 +55,6 @@ def find_most_similar_chunk(query, embeddings):
         scored_chunks.append((similarity, chunk["text"]))
 
     scored_chunks.sort(reverse=True, key=lambda x: x[0])
-    print(scored_chunks)
     return scored_chunks[0] if scored_chunks else (0.0, "")
 
 # --- Pytest Fixtures & Tests ---
@@ -57,8 +70,9 @@ def embeddings():
     "Which programming languages does this person know?",
     "Tell me about this person's experience with AWS.",
 ])
-def test_find_most_relevant_chunk(query, embeddings):
+@patch('openai.embeddings.create', side_effect=mock_create)
+def test_find_most_relevant_chunk(mock_embeddings, query, embeddings):
     similarity, text = find_most_similar_chunk(query, embeddings)
-    print(f"\n🔍 Query: {query}\n✅ Best Match (Score: {similarity:.4f}):\n{text}")
     assert similarity > 0.05  # Lower threshold since we're using mock embeddings
     assert len(text.strip()) > 0
+    mock_embeddings.assert_called_once()
