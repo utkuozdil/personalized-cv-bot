@@ -1,5 +1,6 @@
 import json
 import os
+import traceback
 import uuid
 import secrets
 from datetime import datetime, timezone
@@ -36,13 +37,12 @@ def handler(event, context):
         if not presigned_url:
             raise Exception("Could not generate presigned URL")
         
-        email_response = email_service.send_confirmation_email(
+        email_service.send_confirmation_email(
             email=email,
             filename=filename_from_client,
             token=token,
             base_url=os.getenv("API_GATEWAY", "")  # this will be used in the confirmation link
         )
-        print(email_response)
         
         return response(status_code=200, body={
                 "upload_url": presigned_url,
@@ -51,5 +51,5 @@ def handler(event, context):
             })
 
     except Exception as e:
-        print("Error generating presigned URL:", str(e))
+        traceback.print_exc()
         return response(status_code=500, body={"error": str(e)})

@@ -40,17 +40,6 @@ class S3Service:
             print("S3 Download Error:", e)
             return {"success": False, "error": str(e)}
 
-    def get_presigned_url(self, key: str, expiration: int = 3600) -> Optional[str]:
-        try:
-            return self.s3.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': self.bucket_name, 'Key': key},
-                ExpiresIn=expiration
-            )
-        except ClientError as e:
-            print("S3 Presigned URL Error:", e)
-            return None
-
     def get_presigned_upload_url(self, key: str, content_type: str = "application/pdf", expiration: int = 3600) -> Optional[str]:
         """Generates a presigned URL to allow secure upload of a file directly to S3."""
         try:

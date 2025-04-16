@@ -1,9 +1,10 @@
 from datetime import datetime, timezone
-from decimal import Decimal
 import json
+import traceback
 from src.utility.prompt_util import get_first_message_prompt
 from src.integrations.openai import OpenAIIntegration
 from src.services.dynamodb import DynamodbService
+from src.utility.decimal_util import clean_decimals
 
 dynamodb = DynamodbService()
 openai = OpenAIIntegration()
@@ -15,10 +16,12 @@ def handler(event, context):
             uuid = payload["uuid"]
 
             item = dynamodb.get_by_uuid(uuid)
-            item = clean_decimals(item)
             if not item:
                 print(f"[⚠️] UUID not found: {uuid}")
                 continue
+                
+            # Convert Decimal values to float for JSON serialization
+            item = clean_decimals(item, to_decimal=False)
 
             prompt = get_first_message_prompt(
                 summary=item.get("summary", ""),
@@ -39,12 +42,5 @@ def handler(event, context):
 
         except Exception as e:
             print(f"[❌] Error generating first message: {e}")
+            print(traceback.format_exc())
 
-def clean_decimals(obj):
-    if isinstance(obj, dict):
-        return {k: clean_decimals(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [clean_decimals(i) for i in obj]
-    elif isinstance(obj, Decimal):
-        return float(obj)
-    return obj

@@ -1,5 +1,3 @@
-from datetime import datetime, timezone
-from decimal import Decimal
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -11,10 +9,10 @@ from src.services.s3 import S3Service
 from src.utility.text_divider import chunk_text
 from src.utility.status_util import update_status
 from src.utility.prompt_util import (
-    get_first_message_prompt,
     get_score_and_feedback_prompt,
     get_summary_prompt
 )
+from src.utility.decimal_util import clean_decimals
 
 s3_service = S3Service()
 openai_integration = OpenAIIntegration()
@@ -73,7 +71,7 @@ def handler(event, context):
         extra={
             "name": score_feedback.get("name", "This person"),
             "summary": summary.strip(),
-            "score_feedback": clean_decimal(score_feedback)
+            "score_feedback": clean_decimals(score_feedback)
         }
     )
     print(f"[✅] Status updated after {mid_time - start_time:.2f}s")
@@ -105,13 +103,3 @@ def generate_embeddings(text):
         }
         for i in range(len(chunks))
     ]
-
-def clean_decimal(obj):
-    if isinstance(obj, dict):
-        return {k: clean_decimal(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [clean_decimal(i) for i in obj]
-    elif isinstance(obj, float):
-        return Decimal(str(obj))
-    else:
-        return obj

@@ -1,18 +1,10 @@
 from src.services.dynamodb import DynamodbService
 from src.utility.response_util import response
-from decimal import Decimal
+from src.utility.decimal_util import clean_decimals
 
 dynamodb = DynamodbService()
 
-def convert_decimal_to_float(obj):
-    if isinstance(obj, list):
-        return [convert_decimal_to_float(i) for i in obj]
-    elif isinstance(obj, dict):
-        return {k: convert_decimal_to_float(v) for k, v in obj.items()}
-    elif isinstance(obj, Decimal):
-        return int(obj) if obj % 1 == 0 else float(obj)
-    else:
-        return obj
+
 
 def handler(event, context):
     uuid = event["pathParameters"].get("uuid")
@@ -22,7 +14,7 @@ def handler(event, context):
     try:
         item = dynamodb.get_by_uuid(uuid)
         if item:
-            return response(200, convert_decimal_to_float(item))
+            return response(200, clean_decimals(item, to_decimal=False))
         else:
             return response(404, {"status": "not_found", "message": f"Status for UUID {uuid} not found"})
     except Exception as e:

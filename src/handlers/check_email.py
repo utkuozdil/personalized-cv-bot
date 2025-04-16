@@ -1,17 +1,8 @@
 from src.services.dynamodb import DynamodbService
 from src.utility.response_util import response
-from decimal import Decimal
+from src.utility.decimal_util import clean_decimals
 
 dynamodb = DynamodbService()
-
-def clean_decimals(obj):
-    if isinstance(obj, dict):
-        return {k: clean_decimals(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [clean_decimals(x) for x in obj]
-    elif isinstance(obj, Decimal):
-        return float(obj)
-    return obj
 
 def handler(event, context):
     try:
@@ -39,7 +30,7 @@ def handler(event, context):
 
         return response(200, {
             "hasPrevious": len(confirmed) > 0,
-            "resumes": clean_decimals(resumes)
+            "resumes": clean_decimals(resumes, to_decimal=False)
         })
 
     except Exception as e:

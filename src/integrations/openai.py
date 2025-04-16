@@ -7,18 +7,6 @@ class OpenAIIntegration:
         openai.api_key = self.api_key
         self.model = model
 
-    def embed_text(self, text: str) -> list:
-        text = text.strip().lower()
-        try:
-            response = openai.embeddings.create(
-                input=text,
-                model=self.model
-            )
-            return response.data[0].embedding
-        except Exception as e:
-            print(f"OpenAI Embedding Error: {e}")
-            return []
-
     def embed_batch(self, texts: list) -> list:
         try:
             response = openai.embeddings.create(
@@ -88,12 +76,12 @@ class OpenAIIntegration:
                 return full_response.strip()
             else:
                 # Non-streaming mode - use the direct_chat method
-                return self.direct_chat(messages)
+                return self._direct_chat(messages)
         except Exception as e:
             print(f"Chat completion failed: {e}")
             return ""
 
-    def direct_chat(self, messages, model: str = "gpt-4-turbo", temperature: float = 0.2, max_tokens: int = 1000):
+    def _direct_chat(self, messages, model: str = "gpt-4-turbo", temperature: float = 0.2, max_tokens: int = 1000):
         """
         Direct method to get a chat completion without streaming.
         This method bypasses the generator handling and directly returns the content.
