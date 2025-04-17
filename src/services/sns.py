@@ -2,8 +2,6 @@ import json
 import boto3
 import os
 
-from src.utility.email_format_util import get_mail_template
-
 class SnsService:
     def __init__(self):
         self.sns = boto3.client("sns")

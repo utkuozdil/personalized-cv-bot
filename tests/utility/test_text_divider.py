@@ -1,4 +1,3 @@
-import pytest
 from src.utility.text_divider import chunk_text
 
 def test_chunk_text_basic():

@@ -1,4 +1,3 @@
-import pytest
 from src.utility.email_format_util import get_confirm_response, get_mail_template
 
 def test_get_confirm_response():
