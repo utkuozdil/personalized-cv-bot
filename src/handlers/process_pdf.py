@@ -5,6 +5,7 @@ import uuid
 import secrets
 from datetime import datetime, timezone
 
+from src.constants.status import STATUS_CREATED
 from src.services.ses import EmailService
 from src.services.s3 import S3Service
 from src.utility.status_util import write_status
@@ -28,7 +29,7 @@ def handler(event, context):
         s3_key = f"uploads/{uuid_str}"
 
         token = secrets.token_hex(16)
-        write_status(uuid=uuid_str, status="created", 
+        write_status(uuid=uuid_str, status=STATUS_CREATED, 
                      extra={"token": token, "email": email, "filename": filename_from_client, "conversation": [], "created_at": datetime.now(timezone.utc).isoformat()
                             })
 

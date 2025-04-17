@@ -3,6 +3,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 import traceback
 
+from src.constants.status import STATUS_EMBEDDED
 from src.services.sns import SnsService
 from src.integrations.openai import OpenAIIntegration
 from src.services.s3 import S3Service
@@ -67,7 +68,7 @@ def handler(event, context):
     mid_time = time.time()
     update_status(
         uuid,
-        "embedded",
+        STATUS_EMBEDDED,
         extra={
             "name": score_feedback.get("name", "This person"),
             "summary": summary.strip(),
