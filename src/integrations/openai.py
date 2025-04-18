@@ -1,6 +1,8 @@
 import os
 import openai
 
+from src.constants.openai import SELECTED_CHAT_MODEL, SELECTED_EMBEDDING_MODEL
+
 class OpenAIIntegration:
     def __init__(self, model: str = "text-embedding-3-small"):
         self.api_key = os.getenv("OPENAI_API_KEY")
@@ -11,7 +13,7 @@ class OpenAIIntegration:
         try:
             response = openai.embeddings.create(
                 input=texts,
-                model=self.model
+                model=SELECTED_EMBEDDING_MODEL
             )
             return [item.embedding for item in response.data]
         except Exception as e:
@@ -25,11 +27,11 @@ class OpenAIIntegration:
         )
         return response.data[0].embedding
 
-    def chat(self, messages, model: str = "gpt-4-turbo", temperature: float = 0.2, max_tokens: int = 1000, stream: bool = True):
+    def chat(self, messages, model: str = "gpt-4.1-nano", temperature: float = 0.2, max_tokens: int = 1000, stream: bool = True):
         try:
             if stream:
                 response = openai.chat.completions.create(
-                    model=model,
+                    model=SELECTED_CHAT_MODEL,
                     messages=messages,
                     temperature=temperature,
                     max_tokens=max_tokens,
@@ -49,7 +51,7 @@ class OpenAIIntegration:
             else:
                 # Non-streaming mode - return a direct response
                 response = openai.chat.completions.create(
-                    model=model,
+                    model=SELECTED_CHAT_MODEL,
                     messages=messages,
                     temperature=temperature,
                     max_tokens=max_tokens,
@@ -81,14 +83,14 @@ class OpenAIIntegration:
             print(f"Chat completion failed: {e}")
             return ""
 
-    def _direct_chat(self, messages, model: str = "gpt-4-turbo", temperature: float = 0.2, max_tokens: int = 1000):
+    def _direct_chat(self, messages, model: str = "gpt-4.1-nano", temperature: float = 0.2, max_tokens: int = 1000):
         """
         Direct method to get a chat completion without streaming.
         This method bypasses the generator handling and directly returns the content.
         """
         try:
             response = openai.chat.completions.create(
-                model=model,
+                model=SELECTED_CHAT_MODEL,
                 messages=messages,
                 temperature=temperature,
                 max_tokens=max_tokens,

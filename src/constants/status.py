@@ -3,4 +3,4 @@ STATUS_EXTRACTED = "extracted"
 STATUS_CREATED = "created"
 STATUS_EXTRACTION_FAILED = "extraction_failed"
 STATUS_EXTRACTION_INSUFFICIENT = "extraction_insufficient"
-
+STATUS_FIRST_MESSAGE_GENERATED = "first_message_generated"

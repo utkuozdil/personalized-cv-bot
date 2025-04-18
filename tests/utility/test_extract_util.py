@@ -10,7 +10,7 @@ from src.utility.extract_util import extract_and_upload
 # Constants for testing
 TEST_UUID = "test-uuid"
 TEST_S3_KEY = "uploads/test-uuid.pdf"
-MIN_TEXT_LENGTH = 200
+MIN_WORD_COUNT = 50  # Changed from character to word count
 
 @pytest.fixture(autouse=True)
 def mock_tempfile_fixture(): # Renamed to avoid conflict with standard library
@@ -30,8 +30,9 @@ def test_extract_and_upload_success():
 
         # Mock S3 download success
         mock_s3.download_file.return_value = {"success": True}
-        # Mock PDF extraction success (long enough text)
-        mock_extract_pdf.return_value = "a" * MIN_TEXT_LENGTH
+        # Mock PDF extraction success (enough words)
+        extracted_text = " ".join(["word"] * MIN_WORD_COUNT)  # Create text with MIN_WORD_COUNT words
+        mock_extract_pdf.return_value = extracted_text
         # Mock S3 upload success
         mock_s3.upload_file.return_value = {"success": True}
 
@@ -43,7 +44,7 @@ def test_extract_and_upload_success():
         mock_extract_pdf.assert_called_once_with("dummy_temp_file.pdf")
         mock_s3.upload_file.assert_called_once_with(
             key=expected_key,
-            file_bytes=("a" * MIN_TEXT_LENGTH).encode("utf-8"),
+            file_bytes=extracted_text.encode("utf-8"),
             content_type="text/plain"
         )
         mock_update_status.assert_called_once_with(TEST_UUID, "extracted")
@@ -89,8 +90,8 @@ def test_extract_and_upload_extraction_insufficient():
          patch('src.utility.extract_util.update_status') as mock_update_status:
 
         mock_s3.download_file.return_value = {"success": True}
-        short_text = "a" * (MIN_TEXT_LENGTH - 1)
-        mock_extract_pdf.return_value = short_text
+        insufficient_text = " ".join(["word"] * (MIN_WORD_COUNT - 1))  # Create text with MIN_WORD_COUNT-1 words
+        mock_extract_pdf.return_value = insufficient_text
 
         with pytest.raises(Exception, match="Extracted text is too short"):
             extract_and_upload(TEST_UUID, TEST_S3_KEY)
@@ -141,7 +142,8 @@ def test_extract_and_upload_s3_upload_error():
          patch('src.utility.extract_util.update_status') as mock_update_status:
 
         mock_s3.download_file.return_value = {"success": True}
-        mock_extract_pdf.return_value = "a" * MIN_TEXT_LENGTH
+        extracted_text = " ".join(["word"] * MIN_WORD_COUNT)  # Create text with MIN_WORD_COUNT words
+        mock_extract_pdf.return_value = extracted_text
         # Mock S3 upload failure
         mock_s3.upload_file.side_effect = Exception("Upload failed")
 
