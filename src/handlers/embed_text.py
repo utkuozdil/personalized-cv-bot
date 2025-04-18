@@ -64,8 +64,16 @@ def handler(event, context):
         print(traceback.format_exc())
         score_feedback = {"error": "Failed to parse score feedback"}
     
-    # 📝 Save everything to status before embedding
     mid_time = time.time()
+    payload = {
+        "uuid": uuid,
+        "name": score_feedback.get("name", "This person"),
+        "summary": summary.strip(),
+        "score_feedback": clean_decimals(score_feedback, to_decimal=False)
+    }
+    
+    sns_service.publish(payload)
+    
     update_status(
         uuid,
         STATUS_EMBEDDED,
@@ -76,9 +84,7 @@ def handler(event, context):
         }
     )
     print(f"[✅] Status updated after {mid_time - start_time:.2f}s")
-    
-    sns_service.publish(uuid)
-    
+        
     # 🧠 Generate embeddings in the background
     embeddings = generate_embeddings(text)
     output_key = key.replace("extracted/", "embeddings/").replace(".txt", ".json")

@@ -56,7 +56,7 @@ def rerank_chunks(openai_integration, question, top_chunks):
     messages = get_rerank_prompt(question, context)
 
     output = ""
-    for token, _ in openai_integration.chat(messages, model="gpt-3.5-turbo"):
+    for token, _ in openai_integration.chat(messages, model="gpt-4.1-nano"):
         output += token
 
     try:

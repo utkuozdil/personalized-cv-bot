@@ -19,9 +19,9 @@ def extract_and_upload(uuid: str, s3_key: str) -> str:
             if not extracted_text:
                 update_status(file_name_without_extension, STATUS_EXTRACTION_FAILED)  # Update status on failure
                 raise Exception("Failed to extract text from PDF.")
-            elif len(extracted_text) < 200:
+            elif len(extracted_text.split()) < 50:
                 update_status(file_name_without_extension, STATUS_EXTRACTION_INSUFFICIENT) # Update status if text is too short
-                raise Exception("Extracted text is too short (less than 200 characters).")
+                raise Exception("Extracted text is too short (less than 50 words).")
 
             extracted_key = f"extracted/{file_name_without_extension}.txt"
             s3.upload_file(
