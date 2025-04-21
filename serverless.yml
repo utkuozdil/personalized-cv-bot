@@ -29,10 +29,6 @@ provider:
             - ses:SendEmail
             - ses:SendRawEmail
           Resource: "*"
-        - Effect: Allow
-          Action:
-            - sns:Publish
-          Resource: "*"
   
 functions:
   processPdf:
@@ -53,8 +49,6 @@ functions:
           existing: true
     environment:
       OPENAI_API_KEY: ${env:OPENAI_API_KEY}
-      GENERATE_FIRST_MESSAGE_TOPIC:
-        Ref: GenerateFirstMessageTopic
     timeout: 900
     memorySize: 2048
   
@@ -156,8 +150,3 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-
-    GenerateFirstMessageTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        TopicName: generate-first-message-topic

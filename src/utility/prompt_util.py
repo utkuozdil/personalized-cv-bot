@@ -1,4 +1,5 @@
 import json
+import textwrap
 
 def get_resume_prompt(prompt: str, history: list, context: str = "") -> list:
     messages = [
@@ -44,61 +45,7 @@ def get_rerank_prompt(question, context):
     ]
     return messages
 
-def get_summary_prompt(resume_text):
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are a professional resume reviewer. "
-                "Summarize the resume below in 3–5 sentences. "
-                "Highlight key experiences, skills, and overall profile of the candidate."
-            )
-        },
-        {
-            "role": "user",
-            "content": f"Resume:\n{resume_text}"
-        }
-    ]
-    return messages
 
-def get_score_and_feedback_prompt(resume_text):
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are a professional resume reviewer. "
-                "Your task is to analyze a resume and return a detailed review in JSON format.\n\n"
-                "Include:\n"
-                "1. name (if found)\n"
-                "2. overall_score (1–10)\n"
-                "3. category_scores: clarity, experience, impact, skills\n"
-                "4. feedback: strengths, red_flags, improvements\n\n"
-                "Respond only with valid JSON like:\n"
-                "{\n"
-                "  \"name\": \"John Doe\",\n"
-                "  \"overall_score\": 8.5,\n"
-                "  \"category_scores\": {\n"
-                "    \"clarity\": 9,\n"
-                "    \"experience\": 8,\n"
-                "    \"impact\": 7,\n"
-                "    \"skills\": 8\n"
-                "  },\n"
-                "  \"feedback\": {\n"
-                "    \"strengths\": \"...\",\n"
-                "    \"red_flags\": \"...\",\n"
-                "    \"improvements\": \"...\"\n"
-                "  }\n"
-                "}"
-            )
-        },
-        {
-            "role": "user",
-            "content": f"Resume:\n{resume_text}"
-        }
-    ]
-    return messages
-
-def get_first_message_prompt(summary, score, category_scores, feedback):
     return [
         {
             "role": "system",
@@ -119,3 +66,45 @@ def get_first_message_prompt(summary, score, category_scores, feedback):
             }, indent=2)
         }
     ]
+
+def get_combined_first_message_prompt(resume_text):
+    prompt_content = textwrap.dedent(f"""
+        Here is the candidate's resume:
+
+        \"\"\"{resume_text}\"\"\"
+
+        Please analyze it and respond in the following structure:
+
+        👋 **Greeting**  
+        Welcome the user and explain that you've reviewed their resume.
+
+        📝 **Summary of Candidate**  
+        Summarize their experience and background in 2–3 sentences.
+
+        🎯 **Suggested Job Roles**  
+        List 2–3 job roles or titles that align with their skills and experience.
+
+        🛠️ **Resume Improvement Tips**  
+        Provide 3 tailored suggestions to make their resume more effective for the most relevant job role.
+
+        📌 **Style Guidelines**
+        - Use a friendly, supportive tone.
+        - Format with emojis and bullet points for clarity.
+        - Keep it concise and relevant to job seekers.
+        - Do NOT repeat the resume text.
+    """)
+
+    return [
+        {
+            "role": "system",
+            "content": (
+                "You are a helpful, friendly, and professional AI career assistant. "
+                "You analyze resumes and provide clear, structured, and motivational feedback for job seekers."
+            )
+        },
+        {
+            "role": "user",
+            "content": prompt_content
+        }
+    ]
+
